@@ -83,4 +83,4 @@ wallet_address, credit_score
 ---
 
 _Prepared by: Kiran Choudhari_  
-_Contact: [LinkedIn](https://www.linkedin.com/in/kiran-choudhari-90a4a5248/)_
+_Contact: [LinkedIn](https://www.linkedin.com/in/kiranchoudhari-1510m/)_
