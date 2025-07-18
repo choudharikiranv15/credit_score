@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 from sklearn.preprocessing import MinMaxScaler
-import numpy as np  # Import numpy for np.inf
+import numpy as np
 
 json_file_path = 'user-wallet-transactions.json'
 
@@ -19,24 +19,24 @@ else:
         if '_id' in df.columns and isinstance(df['_id'].iloc[0], dict):
             df['_id'] = df['_id'].apply(lambda x: x.get(
                 '$oid') if isinstance(x, dict) else x)
-            # print("Flattened '_id' column.") # Commented out for cleaner output
+            # print("Flattened '_id' column.")
 
         for col in ['createdAt', 'updatedAt']:
             if col in df.columns and isinstance(df[col].iloc[0], dict):
                 df[col] = df[col].apply(lambda x: x.get(
                     '$date') if isinstance(x, dict) else x)
                 df[col] = pd.to_datetime(df[col], errors='coerce', utc=True)
-                # print(f"Flattened and converted '{col}' to datetime.") # Commented out
+                # print(f"Flattened and converted '{col}' to datetime.")
 
         if 'userWallet' in df.columns:
             df.rename(columns={'userWallet': 'wallet_address'}, inplace=True)
-            # print("Renamed 'userWallet' to 'wallet_address'.") # Commented out
+            # print("Renamed 'userWallet' to 'wallet_address'.")
 
         if 'actionData' in df.columns:
-            # print("Flattening 'actionData' column...") # Commented out
+            # print("Flattening 'actionData' column...")
             action_data_df = pd.json_normalize(df['actionData'])
 
-            # print(f"Columns in action_data_df after json_normalize: {action_data_df.columns.tolist()}") # Commented out
+            # print(f"Columns in action_data_df after json_normalize: {action_data_df.columns.tolist()}")
 
             rename_map = {}
             if 'amount' in action_data_df.columns:
@@ -46,12 +46,12 @@ else:
 
             if rename_map:
                 action_data_df.rename(columns=rename_map, inplace=True)
-                # print(f"Columns in action_data_df after renaming: {action_data_df.columns.tolist()}") # Commented out
+                # print(f"Columns in action_data_df after renaming: {action_data_df.columns.tolist()}")
 
             df = df.drop('actionData', axis=1)
             df = pd.concat([df.reset_index(drop=True),
                            action_data_df.reset_index(drop=True)], axis=1)
-            # print("Flattened 'actionData' column and integrated into DataFrame.") # Commented out
+            # print("Flattened 'actionData' column and integrated into DataFrame.")
         else:
             print(
                 "Warning: 'actionData' column not found. Some features might be missing.")
@@ -80,7 +80,7 @@ else:
                 decimals = token_decimals.get(asset_sym, default_decimals)
                 return float(int(raw_amount_str)) / (10**decimals)
             except (ValueError, TypeError, KeyError) as e:
-                # print(f"Error converting amount: raw='{raw_amount_str}', asset='{asset_sym}', Error: {e}") # Commented out
+                # print(f"Error converting amount: raw='{raw_amount_str}', asset='{asset_sym}', Error: {e}")
                 return pd.NA
 
         print("Converting 'amount_raw' to 'amount' (adjusted for decimals)...")
